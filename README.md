@@ -11,10 +11,8 @@ Suppose the program ClientIPv4_win_2023.exe is running on each team’s workstat
 
 Please note that these tasks are designed for a specific client-server architecture and should be adjusted according to the actual network configuration and requirements. Always ensure proper security measures are in place when setting up network communications.
 
-## Contribution
-Contributions to this project are welcome. Please refer to the contribution guidelines for more information on how to submit pull requests or report issues.
 
 ## License
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the Apache License - see the LICENSE file for details.
 
 For a detailed explanation of each feature and instructions on how to set up and use the program, please refer to the documentation provided in the repository.
