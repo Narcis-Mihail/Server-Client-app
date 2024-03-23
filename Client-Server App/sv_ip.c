@@ -3,7 +3,7 @@
 #define backlog 2
 #define Port "22111"
 
-//de inclus comentarii in timp ce scriem. sunt obligatorii
+
 
 
 void main(){
@@ -19,7 +19,7 @@ void main(){
 	hints.ai_socktype = SOCK_STREAM;
 	hints.ai_flags = AI_PASSIVE;
 	
-	//setam modul in care se va face comunicarea cu server-ul si pe care port vom primi cereri
+	//we set how to communicate with the server and on which port we will receive requests
 	if(getaddrinfo(NULL,Port, &hints, &res )==-1)
 	{
 		perror("server:info");
@@ -27,18 +27,18 @@ void main(){
 	}
 
 
-	//creare socket
+	//create socket
 	s = sockf( res->ai_family,res->ai_socktype, 0);
 	if(s<0)
 	{
 		exit(1);
 	}
 
-	//setam ca adresa sa fie reutilizata
+	//set the address to be reused
 	int optval=1;
 	setsockopt(s, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
 		
-	//asociere socket cu un port 
+	//socket association with a port 
 	b=bind(s,res->ai_addr,res->ai_addrlen);
 	if(b==-1)
 	{
@@ -47,10 +47,10 @@ void main(){
 		exit(1);
 	}
 		
-	//eliberam memoria
+	//release memory
 	freeaddrinfo(res);
 
-	//asteptare conexiuni de pe port
+	
 	int l=listen(s,backlog);
 
 	if(l==-1)
@@ -60,7 +60,7 @@ void main(){
 	}
 	
 
-	//bucla de tratare a clientilor
+	//customer handling loop
 	while(1)
 	{
 
@@ -70,7 +70,7 @@ void main(){
 			continue;
 		}
 
-		//deschidem fisierul pentru a putea scrie in el
+		//we open the file so we can write to it
 		outfile = fopen("site.html","w+");
 		if(outfile == NULL)
 		{
@@ -79,13 +79,13 @@ void main(){
 
 		bytes_recv=-2;
 	
-		//cream cate un proces pentru fiecare client conectat
+		//create one process for each connected client
 		if (!fork())
 		{
 			//close(s);
 			while(bytes_recv!=0)
           	{
-				//se asteapta ca clientul sa trimita o comanda
+				//the customer is expected to send an order
             	bytes_recv=recv(new_fd,buf,MAXSIZE-1,0);
                 if(bytes_recv==-1)
                 {
@@ -108,8 +108,8 @@ void main(){
           	}
 		}	
 		/*
-		In momentul in care se conecteaza un client, se cloneaza procesul si se va astepta
-		o noua conexiune.
+		When a client connects, the process is cloned and will wait
+		a new connection.
 		*/
 		fclose(outfile);
 		close(new_fd);
