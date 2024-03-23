@@ -38,7 +38,7 @@ void client(FILE *outfile,int new_fd){
 	hints.ai_family=AF_INET6;
 	hints.ai_socktype=SOCK_STREAM;	
 	
-	//precizam unde ne vom conecta si modul in care se face aceasta conexiune
+	//we specify where we will connect and how this connection is made
 	if(getaddrinfo("www.neverssl.com","http", &hints, &res )==-1)
 	{
 		perror("site:info");
@@ -48,17 +48,17 @@ void client(FILE *outfile,int new_fd){
 	//if(res->ai_family==AF_INET)
 	//	return 0;
 
-	//cream file descriptor-ul pentru server-ul la care ne vom connecta
+	//create the file descriptor for the server we will connect to
 	s=sockf(res->ai_family,res->ai_socktype,0);
 	if(s<0)
 		exit(1);
 
-	//se realizeaza conexiunea
+	//the connection is made
 	int c = connt(s, res->ai_addr, res->ai_addrlen);
 	if (c<0)
 		exit(1);
 	
-	//trimitem mesajul de request 
+	//send request message 
 	len=strlen(mssg);
 	if(send(s,mssg,len,0)==-1)
 	{
@@ -67,7 +67,7 @@ void client(FILE *outfile,int new_fd){
 	}
 	
 	
-	//se asteapta ca server-ul sa ne raspunda  la request
+	//the server is expected to respond to our request
 	while(bytes_recv!=0)
 	{
 		bytes_recv=recv(s,buf,MAXSIZE-1,0);
@@ -77,7 +77,7 @@ void client(FILE *outfile,int new_fd){
 			break;
 		}
 
-		//in momentul in care se primeste un pachet de la server, acesta va fi trimis inapoi clientului ipv4
+		//when a packet is received from the server, it will be sent back to the ipv4 client
 		len=strlen(buf);
 		if(bytessent=send(new_fd,buf,len,0)==-1)
 		{
@@ -85,7 +85,7 @@ void client(FILE *outfile,int new_fd){
 			break;
 		}
 
-		//in acelasi timp se va scrie si in fisier datele primite de la server
+		//at the same time the data received from the server will be written to the file
 		if(len!=0 && outfile)
 		{
 			fwrite(buf,strlen(buf),1,outfile);
